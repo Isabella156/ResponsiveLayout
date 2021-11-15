@@ -9,6 +9,7 @@ SOURCES += \
         responsive_layout.cpp \
         responsive_window.cpp \
         screenshot.cpp \
+        scroll_layout.cpp \
         searchresultswidget.cpp
 
 HEADERS += \
@@ -17,6 +18,7 @@ HEADERS += \
     responsive_layout.h \
     responsive_window.h \
     screenshot.h \
+    scroll_layout.h \
     searchresultswidget.h
 
 qnx: target.path = /tmp/$${TARGET}/bin
