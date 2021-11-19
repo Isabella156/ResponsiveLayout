@@ -17,6 +17,9 @@ public:
     ResponsiveLayout(): QLayout() {
 //        addChildLayout()
     }
+    ResponsiveLayout(QWidget *parents): QLayout(parents){
+
+    };
     ~ResponsiveLayout();
 
     // standard functions for a QLayout

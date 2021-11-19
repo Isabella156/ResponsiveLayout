@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-07 16:06:43
- * @LastEditTime: 2021-11-15 17:27:15
+ * @LastEditTime: 2021-11-19 11:34:29
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \responsive\responsive_window.cpp
@@ -14,6 +14,7 @@
 #include "responsive_layout.h"
 #include "screenshot.h"
 #include "searchresultswidget.h"
+#include "scroll_layout.h"
 #include <iostream>
 #include <QApplication>
 #include <QScrollArea>
@@ -32,13 +33,38 @@ ResponsiveWindow::ResponsiveWindow() {
     createWidgets();
 }
 
+void addScroll(ResponsiveLayout * rl){
+    QScrollArea *scrollArea = new QScrollArea();
+    SearchResultsWidget* searchResults = new SearchResultsWidget();
+    ScrollLayout* scrollLayout = new ScrollLayout();
+    searchResults->setLayout(scrollLayout);
+
+     rl->addWidget(scrollArea);
+}
+
 void ResponsiveWindow::createWidgets() {   
-//   QScrollArea *scrollArea = new QScrollArea();
+    ResponsiveLayout * rl = new ResponsiveLayout();
+
+    QScrollArea *scrollArea = new QScrollArea(this);
+    scrollArea->setGeometry(0, 0, 325, 320);
+
+    QWidget *scroll = new QWidget(scrollArea);
+    scrollArea->setWidget(scroll);
+    scroll->setGeometry(0, 0, 300, 3200);
+
+    ResponsiveLayout* sl = new ResponsiveLayout(scroll);
+
+    for(int i = 0; i < 17; i ++){
+        sl->addWidget(new ResponsiveLabel(kSResultImage));
+        sl->addWidget(new ResponsiveLabel(kSResultText));
+    }
+    sl->setGeometry(scroll->rect());
+
+//    addScroll2();
+    setLayout(rl);
+
 //   scrollArea->setWidgetResizable(true);
-
-//   ResponsiveLayout * rl = new ResponsiveLayout();
-//    rl->setSizeConstraint(QLayout::SetMinAndMaxSize);
-
+    //    rl->setSizeConstraint(QLayout::SetMinAndMaxSize);
 //   SearchResultsWidget *searchResults = new SearchResultsWidget();
 //   searchResults->setMinimumSize(minimumSize());
 //   searchResults->setMaximumSize(1280, 720);
@@ -60,31 +86,30 @@ void ResponsiveWindow::createWidgets() {
 //    mainLayout->addWidget(new ResponsiveLabel(kSOptions));
 //    setLayout(rl);
 
-    QScrollArea *m_pChatListScrollArea = new QScrollArea();
-//    m_pChatListScrollArea->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
-    m_pChatListScrollArea->setWidgetResizable(true);
+//    QScrollArea *m_pChatListScrollArea = new QScrollArea();
+////    m_pChatListScrollArea->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
+//    m_pChatListScrollArea->setWidgetResizable(true);
 
-    QVBoxLayout *m_pSCVLayout = new QVBoxLayout();
-    m_pSCVLayout->setSizeConstraint(QVBoxLayout::SetMinAndMaxSize);
+//    ResponsiveLayout *m_pSCVLayout = new ResponsiveLayout();
+//    m_pSCVLayout->setSizeConstraint(QVBoxLayout::SetMinAndMaxSize);
 
-    QWidget *widget = new QWidget();
-//    widget->setMinimumSize(72, 32);
-//    widget->setMaximumSize(80, 32);
+//    QWidget *widget = new QWidget();
+////    widget->setMinimumSize(72, 32);
+////    widget->setMaximumSize(80, 32);
 
-    int i = 0;
-    QString str("pushButton %1");
-    QPushButton *pushButton;
-    for(i = 0; i < 10; i++){
-        pushButton = new QPushButton(str.arg(i + 1), widget);
-        m_pSCVLayout->addWidget(pushButton);
-    }
-    widget->setLayout(m_pSCVLayout);
-    m_pChatListScrollArea->setWidget(widget);
+//    int i = 0;
+//    QString str("pushButton %1");
+//    QPushButton *pushButton;
+//    for(i = 0; i < 10; i++){
+//        pushButton = new QPushButton(str.arg(i + 1), widget);
+//        m_pSCVLayout->addWidget(pushButton);
+//    }
+//    widget->setLayout(m_pSCVLayout);
+//    m_pChatListScrollArea->setWidget(widget);
 
-    QVBoxLayout *mainLayout = new QVBoxLayout();
-    mainLayout->addWidget(m_pChatListScrollArea);
-    setLayout(mainLayout);
-
+//    ResponsiveLayout *mainLayout = new ResponsiveLayout();
+//    mainLayout->addWidget(m_pChatListScrollArea);
+//    setLayout(mainLayout);
 }
 
 

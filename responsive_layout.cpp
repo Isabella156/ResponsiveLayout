@@ -10,16 +10,20 @@
 // you should probably make extensive changes to this function
 void ResponsiveLayout::setGeometry(const QRect &r ) { // our layout should fit inside r
 
-
-
     QLayout::setGeometry(r);
     int resultCnt = 0;
+    int size = list_.size();
 
     for (int i = 0; i < list_.size(); i++) {
 
         QLayoutItem *o = list_.at(i);
 
         try {
+            const char* name;
+            name = o->widget()->metaObject()->className();
+            if(!strcmp(name, "QScrollArea")){
+                o->widget()->setGeometry(0, 0.2 * r.height(), r.width(), 0.8 * r.height());
+            }
             // cast the widget to one of our responsive labels
             ResponsiveLabel *label = static_cast<ResponsiveLabel *>(o->widget());
             int spacing = 0.01 * r.width();
