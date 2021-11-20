@@ -50,7 +50,7 @@ void ResponsiveLayout::setGeometry(const QRect &r ) { // our layout should fit i
                     setSearchGeometry(r, label, resultCnt, 4);
                 }
                 int squareWidth = r.width() / column;
-                if(r.height() - 100< squareWidth){
+                if(r.height() - 200< squareWidth){
                     horizontalOne(r, label, resultCnt);
                 }else{
                     verticalThree(r, label, resultCnt);

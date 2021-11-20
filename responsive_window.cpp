@@ -17,8 +17,6 @@
 #include "scroll_layout.h"
 #include <iostream>
 #include <QApplication>
-#include <QVBoxLayout>
-#include <QPushButton>
 
 
 
@@ -38,7 +36,7 @@ void ResponsiveWindow::resizeEvent(QResizeEvent *event){
     int spacing = 0.01 * this->geometry().width();
     int column, squareWidth;
 
-    if(this->geometry().width() < 620){
+    if(this->geometry().width() <= 620){
         column = 2;
         areaX = scrollX = 0;
         areaY = 70 + 0.02 * this->geometry().width();
@@ -46,7 +44,7 @@ void ResponsiveWindow::resizeEvent(QResizeEvent *event){
         areaHeight = this->geometry().height() - 100;
         scrollY = 100;
         scrollWidth = areaWidth - 40;
-        scrollHeight = scrollWidth * 4.6;
+        scrollHeight = scrollWidth * 4.55;
         squareWidth = this->geometry().width() / column;
         // horizontal layout
         if(areaHeight < squareWidth){
@@ -55,7 +53,7 @@ void ResponsiveWindow::resizeEvent(QResizeEvent *event){
             areaHeight = this->geometry().height();
             areaWidth = this->geometry().width() - areaX;
             scrollWidth = areaWidth - 40;
-            scrollHeight = scrollWidth * 4.6;
+            scrollHeight = (scrollWidth / column) * (16 / column + 1) + 0.1 * scrollWidth;
         }
         // QScrollArea
         scrollArea->setGeometry(areaX, areaY, areaWidth, areaHeight);
@@ -63,17 +61,46 @@ void ResponsiveWindow::resizeEvent(QResizeEvent *event){
         scroll->setGeometry(scrollX, scrollY, scrollWidth, scrollHeight);
     }
     if(this->geometry().width() > 620){
-        scrollArea->setGeometry(0, 150 + 0.03 * this->geometry().width(), this->geometry().width(), this->geometry().height() - 200);
+        if(this->geometry().width() < 890){
+            column = 3;
+        }else{
+            column = 4;
+        }
+        areaX = scrollX = 0;
+        areaY = 150 + 0.03 * this->geometry().width();
+        areaWidth = this->geometry().width();
+        areaHeight = this->geometry().height() - 200;
+        scrollY = 150;
+        scrollWidth = this->geometry().width() - 40;
         if(this->geometry().width() < 660){
-            scrollHeight = (this->geometry().width() - 40) * 4.6;
+            scrollHeight = (this->geometry().width() - 40) * 4.55;
         }else if(this->geometry().width() >= 660 && this->geometry().width() < 930){
-            scrollHeight = (this->geometry().width() - 40) * 2.1;
+            scrollHeight = (this->geometry().width() - 40) * 2.05;
         }else{
             scrollHeight = (this->geometry().width() - 40) * 1.3;
         }
-        scroll->setGeometry(0, 150, this->geometry().width() - 40, scrollHeight);
+        squareWidth = this->geometry().width() / column;
+        if(areaHeight < squareWidth){
+            areaX = scrollX = 80 + spacing * 2;
+            areaY = scrollY = 0;
+            areaHeight = this->geometry().height();
+            areaWidth = this->geometry().width() - areaX;
+            if(areaWidth < 660){
+                column = 2;
+            }else if(areaWidth >= 660 && areaWidth < 930){
+                column = 3;
+            }else{
+                column = 4;
+            }
+            scrollWidth = areaWidth - 40;
+            scrollHeight = (scrollWidth / column) * (16 / column + 1) + 0.1 * scrollWidth;
+        }
+        // QScrollArea
+        scrollArea->setGeometry(areaX, areaY, areaWidth, areaHeight);
+        // QWidget
+        scroll->setGeometry(scrollX, scrollY, scrollWidth, scrollHeight);
     }
-    printf("width: %i\n, height: %i\n", this->geometry(). width(), this->geometry().height());
+//    printf("width: %i\n, height: %i\n", this->geometry(). width(), this->geometry().height());
 }
 
 void ResponsiveWindow::addScroll(){

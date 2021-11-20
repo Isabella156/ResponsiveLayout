@@ -28,7 +28,8 @@ const QString
         kSForward       = ">", // next page of search results
         kSBackward      = "<", // previous page of search results
         kSOptions       = "search options",
-        kSOrders    = "orders";
+        kSOrders    = "orders",
+        kSLocation  = "lacations";
 
 
 // every label name has a colour
