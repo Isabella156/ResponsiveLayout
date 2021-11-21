@@ -1,24 +1,11 @@
-/*
- * @Author: your name
- * @Date: 2021-11-07 16:06:43
- * @LastEditTime: 2021-11-19 11:34:29
- * @LastEditors: Please set LastEditors
- * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- * @FilePath: \responsive\responsive_window.cpp
- */
 //
 // Created by twak on 14/10/2019.
 //
 
 #include "responsive_window.h"
-
 #include "screenshot.h"
-#include "searchresultswidget.h"
-#include "scroll_layout.h"
 #include <iostream>
 #include <QApplication>
-
-
 
 
 ResponsiveWindow::ResponsiveWindow() {
@@ -26,87 +13,107 @@ ResponsiveWindow::ResponsiveWindow() {
     setWindowTitle("2811 coursework 2: responsive layouts");
     setMinimumSize(320, 320);
     setMaximumSize(1280, 720);
-
     createWidgets();
 }
 
+void horizontalScroll(int &areaX, int &areaY, int &areaWidth, int &areaHeight, \
+int &scrollX, int &scrollY, int &scrollWidth, int &scrollHeight, int spacing, \
+int width, int height, int column){
+
+    areaX = scrollX = 180 + 2 * spacing;
+    areaY = 0;
+    areaWidth = width - areaX;
+    areaHeight = height;
+    scrollY = areaY;
+    scrollWidth = areaWidth - 40;
+    scrollHeight = (scrollWidth / column) * (16 / column + 1) + 0.1 * scrollWidth;
+}
+
+void verticalOneScroll(int &areaX, int &areaY, int &areaWidth, \
+int &areaHeight, int &scrollX, int &scrollY, int &scrollWidth, \
+int &scrollHeight, int width, int height){
+    areaX = scrollX = 0;
+    areaY = 145 + 0.02 * width;
+    areaWidth = width;
+    areaHeight = height - areaY;
+    scrollY = areaY;
+    scrollWidth = areaWidth - 40;
+    scrollHeight = scrollWidth * 4.6;
+}
+
+void verticalTwoScroll(int &areaX, int &areaY, int &areaWidth, \
+int &areaHeight, int &scrollX, int &scrollY, int &scrollWidth, \
+int &scrollHeight, int width, int height){
+                areaX = scrollX = 0;
+            areaY = 210 + 0.03 * width;
+            areaWidth = width;
+            areaHeight = height - areaY;
+            scrollY = areaY;
+            scrollWidth = areaWidth - 40;
+            scrollHeight = scrollWidth * 4.6;
+}
+
+void verticalThreeScroll(int &areaX, int &areaY, int &areaWidth, \
+int &areaHeight, int &scrollX, int &scrollY, int &scrollWidth, \
+int width, int height){
+    areaX = scrollX = 0;
+    areaY = 270 + 0.04 * width;
+    areaWidth = width;
+    areaHeight = height - areaY;
+    scrollY = areaY;
+    scrollWidth = areaWidth - 40;
+}
+
 void ResponsiveWindow::resizeEvent(QResizeEvent *event){
-    int areaX, areaY, areaWidth, areaHeight;
-    int scrollX, scrollY, scrollWidth, scrollHeight;
-    int spacing = 0.01 * this->geometry().width();
+    int width = this->geometry().width(), height = this->geometry().height();
+    int areaX, areaY, areaWidth, areaHeight,scrollX, scrollY, scrollWidth, scrollHeight;
+    int spacing = 0.01 * width;
     int column, squareWidth;
 
-    if(this->geometry().width() <= 620){
+    if(width < 428)
+        verticalOneScroll(areaX, areaY, areaWidth, areaHeight, scrollX, \
+        scrollY, scrollWidth, scrollHeight, width, height);
+    else if(width >= 428 && width <= 620){
         column = 2;
-        areaX = scrollX = 0;
-        areaY = 70 + 0.02 * this->geometry().width();
-        areaWidth = this->geometry().width();
-        areaHeight = this->geometry().height() - 100;
-        scrollY = 100;
-        scrollWidth = areaWidth - 40;
-        scrollHeight = scrollWidth * 4.55;
-        squareWidth = this->geometry().width() / column;
-        // horizontal layout
-        if(areaHeight < squareWidth){
-            areaX = scrollX = 80 + spacing * 2;
-            areaY = scrollY = 0;
-            areaHeight = this->geometry().height();
-            areaWidth = this->geometry().width() - areaX;
-            scrollWidth = areaWidth - 40;
-            scrollHeight = (scrollWidth / column) * (16 / column + 1) + 0.1 * scrollWidth;
-        }
-        // QScrollArea
-        scrollArea->setGeometry(areaX, areaY, areaWidth, areaHeight);
-        // QWidget
-        scroll->setGeometry(scrollX, scrollY, scrollWidth, scrollHeight);
-    }
-    if(this->geometry().width() > 620){
-        if(this->geometry().width() < 890){
+        squareWidth = width / column;
+        if(height - 210 < squareWidth)
+            horizontalScroll(areaX, areaY, areaWidth, areaHeight, \
+            scrollX, scrollY, scrollWidth, scrollHeight, spacing ,width, height, column);
+        else
+            verticalTwoScroll(areaX, areaY, areaWidth, areaHeight, scrollX, \
+            scrollY, scrollWidth, scrollHeight, width, height);
+    }else{
+        if(width < 890)
             column = 3;
-        }else{
+        else
             column = 4;
-        }
-        areaX = scrollX = 0;
-        areaY = 150 + 0.03 * this->geometry().width();
-        areaWidth = this->geometry().width();
-        areaHeight = this->geometry().height() - 200;
-        scrollY = 150;
-        scrollWidth = this->geometry().width() - 40;
-        if(this->geometry().width() < 660){
-            scrollHeight = (this->geometry().width() - 40) * 4.55;
-        }else if(this->geometry().width() >= 660 && this->geometry().width() < 930){
-            scrollHeight = (this->geometry().width() - 40) * 2.05;
-        }else{
-            scrollHeight = (this->geometry().width() - 40) * 1.3;
-        }
-        squareWidth = this->geometry().width() / column;
-        if(areaHeight < squareWidth){
-            areaX = scrollX = 80 + spacing * 2;
-            areaY = scrollY = 0;
-            areaHeight = this->geometry().height();
-            areaWidth = this->geometry().width() - areaX;
-            if(areaWidth < 660){
+        squareWidth = width / column;
+        if(height - 270 < squareWidth){
+            areaWidth = width - 180 - 2 * spacing;
+            if(areaWidth < 660)
                 column = 2;
-            }else if(areaWidth >= 660 && areaWidth < 930){
+            else if(areaWidth >= 660 && areaWidth < 930)
                 column = 3;
-            }else{
+            else
                 column = 4;
-            }
-            scrollWidth = areaWidth - 40;
-            scrollHeight = (scrollWidth / column) * (16 / column + 1) + 0.1 * scrollWidth;
+            horizontalScroll(areaX, areaY, areaWidth, areaHeight, \
+            scrollX, scrollY, scrollWidth, scrollHeight, spacing ,width, height, column);
+        }else{
+            verticalThreeScroll(areaX, areaY, areaWidth, areaHeight, scrollX, \
+            scrollY, scrollWidth, width, height);
+            if(width < 660)
+                scrollHeight = scrollWidth * 4.55;
+            else if(width >= 660 && width < 930)
+                scrollHeight = scrollWidth * 2.05;
+            else
+                scrollHeight = scrollWidth * 1.3;
         }
-        // QScrollArea
-        scrollArea->setGeometry(areaX, areaY, areaWidth, areaHeight);
-        // QWidget
-        scroll->setGeometry(scrollX, scrollY, scrollWidth, scrollHeight);
     }
-//    printf("width: %i\n, height: %i\n", this->geometry(). width(), this->geometry().height());
+    // QScrollArea
+    scrollArea->setGeometry(areaX, areaY, areaWidth, areaHeight);
+    // QWidget
+    scroll->setGeometry(scrollX, scrollY, scrollWidth, scrollHeight);
 }
-
-void ResponsiveWindow::addScroll(){
-
-}
-
 
 void ResponsiveWindow::createWidgets() {   
     ResponsiveLayout * rl = new ResponsiveLayout(this);
@@ -115,10 +122,8 @@ void ResponsiveWindow::createWidgets() {
     scrollArea->setFrameShape(QFrame::NoFrame);
     scroll = new QWidget(scrollArea);
     scrollArea->setWidget(scroll);
-//    scrollArea->setWidgetResizable(true);
 
     ResponsiveLayout* sl = new ResponsiveLayout(scroll);
-
     for(int i = 0; i < 17; i ++){
         sl->addWidget(new ResponsiveLabel(kSResultImage));
         sl->addWidget(new ResponsiveLabel(kSResultText));
@@ -137,7 +142,7 @@ void ResponsiveWindow::createWidgets() {
     rl->addWidget(new ResponsiveLabel(kSQuery));
     rl->addWidget(new ResponsiveLabel(kSOptions));
     rl->addWidget(new ResponsiveLabel(kSOrders));
-
+    rl->addWidget(new ResponsiveLabel(kSLocation));
 }
 
 

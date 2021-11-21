@@ -12,36 +12,28 @@ void ResponsiveLayout::setGeometry(const QRect &r ) { // our layout should fit i
 
     QLayout::setGeometry(r);
     int resultCnt = 0;
+    int squareWidth;
 
     for (int i = 0; i < list_.size(); i++) {
-
         QLayoutItem *o = list_.at(i);
-
         try {
             int column;
             int spacing = 0.01 * r.width();
-            const char* name;
-            name = o->widget()->metaObject()->className();
-            if(!strcmp(name, "QScrollArea")){
-                o->widget()->setGeometry(0, 0.2 * r.height(), r.width(), 0.8 * r.height());
-            }
             // cast the widget to one of our responsive labels
             ResponsiveLabel *label = static_cast<ResponsiveLabel *>(o->widget());
             if (label == NULL) // null: cast failed on pointer
                 std::cout << "warning, unknown widget class in layout" << std::endl;
-            // mobile phone vertical
             else if(r.width() < 428){
-                column = 2;
-                verticalOne(r, label, resultCnt);
+                verticalOne(r, label, resultCnt, spacing);
             }else if(r.width() >= 428 && r.width() <= 620){
                 column = 2;
-                int squareWidth = r.width() / column;
-                if(r.height() - 100< squareWidth){
-                    horizontalOne(r, label, resultCnt);
+                squareWidth = r.width() / column;
+                if(r.height() - 210< squareWidth){
+                    horizontalOne(r, label, spacing);
                 }else{
-                    verticalTwo(r, label, resultCnt);
+                    verticalTwo(r, label, resultCnt, spacing);
                 }
-            }else if(r.width() > 620){
+            }else if(r.width() > 620 && r.width() < 890){
                 if(r.width() < 890){
                     column = 3;
                     setSearchGeometry(r, label, resultCnt, 3);
@@ -49,11 +41,20 @@ void ResponsiveLayout::setGeometry(const QRect &r ) { // our layout should fit i
                     column = 4;
                     setSearchGeometry(r, label, resultCnt, 4);
                 }
-                int squareWidth = r.width() / column;
-                if(r.height() - 200< squareWidth){
-                    horizontalOne(r, label, resultCnt);
+                squareWidth = r.width() / column;
+                if(r.height() - 270< squareWidth){
+                    horizontalOne(r, label, spacing);
                 }else{
-                    verticalThree(r, label, resultCnt);
+                    verticalThree(r, label, spacing);
+                }
+            }else{
+                column = 4;
+                squareWidth = r.width() / column;
+                
+                if(r.height() - 270 < squareWidth){
+                    horizontalOne(r, label, spacing);
+                }else{
+                    verticalFour(r, label, resultCnt, spacing);
                 }
             }
         }
@@ -64,112 +65,138 @@ void ResponsiveLayout::setGeometry(const QRect &r ) { // our layout should fit i
     }
 }
 
-// vertical one
-void ResponsiveLayout::verticalOne(const QRect &r, ResponsiveLabel* label, int &resultCnt){
-    int spacing = 0.01 * r.width();
-    if(label->text() == kMenu){
-        label->setGeometry(spacing, 0, 0.1 * r.width(), 40);
-    }else if(label->text() == kHomeLink){
-        label->setGeometry(0.12 * r.width(), 0, 0.15 * r.width(), 40);
-    }else if(label->text() == kSQuery){
-        label->setGeometry(0.28 * r.width(), 0, 0.45 * r.width(), 40);
-    }else if(label->text() == kSButton){
-        label->setGeometry(0.74 * r.width(), 0, 0.25 * r.width(), 40);
-    }else if(label->text() == kAdvert){
-        label->setGeometry(spacing, 40 + spacing, 0.42 * r.width(), 30);
-    }else if(label->text() == kSOptions){
-        label->setGeometry(0.44 * r.width(), 40 + spacing, 0.55 * r.width(), 30);
-    }else if(label->text() == kShoppingBasket){
+void ResponsiveLayout::verticalOne(const QRect &r, ResponsiveLabel* label, \
+int &resultCnt, int spacing){
+    if(label->text() == kHomeLink)
         label->setGeometry(0, 0, 0, 0);
-    }else if(label->text() == kSignIn){
+    else if(label->text() == kShoppingBasket)
         label->setGeometry(0, 0, 0, 0);
-    }else if(label->text() == kNavTabs){
+    else if(label->text() == kSignIn)
         label->setGeometry(0, 0, 0, 0);
-    }else if(label->text() == kSOrders){
+    else if(label->text() == kMenu)
+        label->setGeometry(spacing, 0, 0.16 * r.width(), 45);
+    else if(label->text() == kNavTabs)
         label->setGeometry(0, 0, 0, 0);
-    }
+    else if(label->text() == kAdvert){
+        label->setGeometry(spacing, 45 + spacing, 0.98 * r.width(), 100);
+    }else if(label->text() == kSButton)
+        label->setGeometry(0.69 * r.width(), 0, 0.3 * r.width(), 45);
+    else if(label->text() == kSQuery)
+        label->setGeometry(0.18 * r.width(), 0, 0.5 * r.width(), 45);
+    else if(label->text() == kSOptions)
+        label->setGeometry(0, 0, 0, 0);
+    else if(label->text() == kSOrders)
+        label->setGeometry(0, 0, 0, 0);
+    else if(label->text() == kSLocation)
+        label->setGeometry(0, 0, 0, 0);  
     setSearchGeometry(r, label, resultCnt, 2);
 }
 
-// vertical two
-void ResponsiveLayout::verticalTwo(const QRect &r, ResponsiveLabel* label, int &resultCnt){
-    int spacing = 0.01 * r.width();
-    if(label->text() == kMenu){
-        label->setGeometry(spacing, 0, 0.1 * r.width(), 40);
-    }else if(label->text() == kHomeLink){
-        label->setGeometry(0.12 * r.width(), 0, 0.15 * r.width(), 40);
-    }else if(label->text() == kSQuery){
-        label->setGeometry(0.28 * r.width(), 0, 0.35 * r.width(), 40);
-    }else if(label->text() == kSButton){
-        label->setGeometry(0.64 * r.width(), 0, 0.18 * r.width(), 40);
-    }else if(label->text() == kShoppingBasket){
-        label->setGeometry(0.83 * r.width(), 0, 0.15 * r.width(), 40);
-    }else if(label->text() == kAdvert){
-        label->setGeometry(spacing, 40 + spacing, 0.57 * r.width(), 30);
-    }else if(label->text() == kSOptions){
-        label->setGeometry(0.59 * r.width(), 40 + spacing, 0.4 * r.width(), 30);
-    }else if(label->text() == kNavTabs){
+void ResponsiveLayout::verticalTwo(const QRect &r, ResponsiveLabel* label, \
+int &resultCnt, int spacing){
+    if(label->text() == kHomeLink)
+        label->setGeometry(0.12 * r.width(), 0, 0.15 * r.width(), 45);
+    else if(label->text() == kShoppingBasket)
+        label->setGeometry(0.83 * r.width(), 0, 0.15 * r.width(), 45);
+    else if(label->text() == kSignIn)
         label->setGeometry(0, 0, 0, 0);
-    }else if(label->text() == kSignIn){
+    else if(label->text() == kMenu)
+        label->setGeometry(spacing, 0, 0.1 * r.width(), 45);
+    else if(label->text() == kNavTabs)
         label->setGeometry(0, 0, 0, 0);
-    }else if(label->text() == kSOrders){
+    else if(label->text() == kAdvert){
+        label->setGeometry(spacing, 45 + spacing, 0.98 * r.width(), 120);
+    }else if(label->text() == kSButton)
+        label->setGeometry(0.64 * r.width(), 0, 0.18 * r.width(), 45);
+    else if(label->text() == kSQuery)
+        label->setGeometry(0.28 * r.width(), 0, 0.35 * r.width(), 45);
+    else if(label->text() == kSOptions)
+        label->setGeometry(spacing, 165 + 2 * spacing, 0.98 * r.width(), 45);
+    else if(label->text() == kSOrders)
         label->setGeometry(0, 0, 0, 0);
-    }
-         setSearchGeometry(r, label, resultCnt, 2);
-
+    else if(label->text() == kSLocation)
+        label->setGeometry(0, 0, 0, 0);
+    setSearchGeometry(r, label, resultCnt, 2);
 }
 
-void ResponsiveLayout::verticalThree(const QRect &r, ResponsiveLabel* label, int &resultCnt){
-    int spacing = 0.01 * r.width();
-    if(label->text() == kHomeLink){
+void ResponsiveLayout::verticalThree(const QRect &r, ResponsiveLabel* label, \
+ int spacing){
+    if(label->text() == kHomeLink)
         label->setGeometry(spacing, 0, 0.12 * r.width(), 50);
-    }else if(label->text() == kSQuery){
-        label->setGeometry(0.14 * r.width(), 0, 0.36 * r.width(), 50);
-    }else if(label->text() == kSButton){
-        label->setGeometry(0.51 * r.width(), 0, 0.15 * r.width(), 50);
-    }else if(label->text() == kShoppingBasket){
+    else if(label->text() == kShoppingBasket)
         label->setGeometry(0.67 * r.width(), 0, 0.15 * r.width(), 50);
-    }else if(label->text() == kSignIn){
+    else if(label->text() == kSignIn)
         label->setGeometry(0.83 * r.width(), 0, 0.15 * r.width(), 50);
-    }else if(label->text() == kMenu){
+    else if(label->text() == kMenu)
         label->setGeometry(0, 0, 0, 0);
-    }else if(label->text() == kNavTabs){
+    else if(label->text() == kNavTabs)
         label->setGeometry(spacing, 50 + spacing, 0.98 * r.width(), 50);
-    }else if(label->text() == kAdvert){
-        label->setGeometry(spacing, 100 + 2 * spacing, 0.7 * r.width(), 50);
-    }else if(label->text() == kSOptions){
-        label->setGeometry(0.72 * r.width(), 100 + 2 * spacing, 0.27 * r.width(), 50);
-    }else if(label->text() == kSOrders){
+    else if(label->text() == kAdvert){
+        label->setGeometry(spacing, 100 + 2 * spacing, 0.98 * r.width(), 120);
+    }else if(label->text() == kSButton)
+        label->setGeometry(0.51 * r.width(), 0, 0.15 * r.width(), 50);
+    else if(label->text() == kSQuery)
+        label->setGeometry(0.14 * r.width(), 0, 0.36 * r.width(), 50);
+    else if(label->text() == kSOptions)
+        label->setGeometry(spacing, 220 + 3 * spacing, 0.98 * r.width(), 50);
+    else if(label->text() == kSOrders)
         label->setGeometry(0, 0, 0, 0);
-    }
-
-
+    else if(label->text() == kSLocation)
+        label->setGeometry(0, 0, 0, 0);
 }
 
-void ResponsiveLayout::horizontalOne(const QRect &r, ResponsiveLabel* label, int &resultCnt){
-    int spacing = 0.01 * r.width();
+void ResponsiveLayout::verticalFour(const QRect &r, ResponsiveLabel* label, \
+int &resultCnt, int spacing){
+    if(label->text() == kHomeLink)
+        label->setGeometry(0.12 * r.width(), 0, 0.1 * r.width() , 50);
+    else if(label->text() == kShoppingBasket)
+        label->setGeometry(0.56 * r.width(), 0, 0.1 * r.width(), 50);
+    else if(label->text() == kSignIn)
+        label->setGeometry(0.67 * r.width(), 0, 0.1 * r.width(), 50);
+    else if(label->text() == kMenu)
+        label->setGeometry(spacing, 0, 0.1 * r.width(), 50);
+    else if(label->text() == kNavTabs)
+        label->setGeometry(spacing, 50 + spacing, 0.98 * r.width(), 50);
+    else if(label->text() == kAdvert){
+        label->setGeometry(spacing, 100 + 2 * spacing, 0.98 * r.width(), 120);
+    }else if(label->text() == kSButton)
+        label->setGeometry(0.45 * r.width(), 0, 0.1 * r.width(), 50);
+    else if(label->text() == kSQuery)
+        label->setGeometry(0.23 * r.width(), 0, 0.21 * r.width(), 50);
+    else if(label->text() == kSOptions)
+        label->setGeometry(spacing, 220 + 3 * spacing, 0.98 * r.width(), 50);
+    else if(label->text() == kSOrders)
+        label->setGeometry(0.78 * r.width(), 0, 0.1 * r.width(), 50);
+    else if(label->text() == kSLocation)
+        label->setGeometry(0.89 * r.width(), 0, 0.1 * r.width(), 50);
+    
+    setSearchGeometry(r, label, resultCnt, 4);
+}
+
+void ResponsiveLayout::horizontalOne(const QRect &r, ResponsiveLabel* label, int spacing){
     int widgetHeight = (r.height() - 4 * spacing) / 5;
-    if(label->text() == kMenu){
-        label->setGeometry(spacing, 0, 80, widgetHeight);
-    }else if(label->text() == kHomeLink){
+    if(label->text() == kHomeLink)
         label->setGeometry(spacing, widgetHeight + spacing, 80, widgetHeight);
-    }else if(label->text() == kShoppingBasket){
+    else if(label->text() == kShoppingBasket)
         label->setGeometry(spacing, (widgetHeight +spacing) * 2, 80, widgetHeight);
-    }else if(label->text() == kSignIn){
+    else if(label->text() == kSignIn)
         label->setGeometry(spacing, (widgetHeight +spacing) * 3, 80, widgetHeight);
-    }else if(label->text() == kSOrders){
-        label->setGeometry(spacing, (widgetHeight +spacing) * 4, 80, widgetHeight);
-    }else if(label->text() == kNavTabs){
+    else if(label->text() == kMenu)
+        label->setGeometry(spacing, 0, 80, widgetHeight);
+    else if(label->text() == kNavTabs)
         label->setGeometry(0, 0, 0, 0);
-    }else if(label->text() == kAdvert){
+    else if(label->text() == kAdvert){
+        label->setGeometry(80 + 2 * spacing, 0, 100, r.height());
+    }else if(label->text() == kSButton)
         label->setGeometry(0, 0, 0, 0);
-    }else if(label->text() == kSButton){
+    else if(label->text() == kSQuery)
         label->setGeometry(0, 0, 0, 0);
-    }else if(label->text() == kSQuery){
+    else if(label->text() == kSOptions)
         label->setGeometry(0, 0, 0, 0);
-    }else if(label->text() == kSOptions){
+    else if(label->text() == kSOrders)
+        label->setGeometry(spacing, widgetHeight * 4 + spacing * 4, 80, widgetHeight);
+    else if(label->text() == kSLocation)
         label->setGeometry(0, 0, 0, 0);
-    }
 }
 
 void ResponsiveLayout::setSearchGeometry(const QRect &r, ResponsiveLabel* label, int &resultCnt, int column){

@@ -29,7 +29,7 @@ const QString
         kSBackward      = "<", // previous page of search results
         kSOptions       = "search options",
         kSOrders    = "orders",
-        kSLocation  = "lacations";
+        kSLocation  = "location";
 
 
 // every label name has a colour
@@ -47,7 +47,8 @@ const std::map<QString, QString> kColours = {
         std::make_pair(kSForward,       "#5caeff"),
         std::make_pair(kSBackward,      "#5caeff"),
         std::make_pair(kSOptions,       "#9dceff"),
-        std::make_pair(kSOrders,       "#F0Cf61")
+        std::make_pair(kSOrders,        "#F0Cf61"),
+        std::make_pair(kSLocation,      "#EF3E4A")
     };
 
 class ResponsiveLabel : public QLabel {
