@@ -11,28 +11,28 @@
 void ResponsiveLayout::setGeometry(const QRect &r ) { // our layout should fit inside r
 
     QLayout::setGeometry(r);
-    int resultCnt = 0;
-    int squareWidth;
+    int resultCnt = 0, squareWidth, column;
+    double spacing = 0.01 * r.width();
 
     for (int i = 0; i < list_.size(); i++) {
         QLayoutItem *o = list_.at(i);
         try {
-            int column;
-            int spacing = 0.01 * r.width();
             // cast the widget to one of our responsive labels
             ResponsiveLabel *label = static_cast<ResponsiveLabel *>(o->widget());
             if (label == NULL) // null: cast failed on pointer
                 std::cout << "warning, unknown widget class in layout" << std::endl;
-            else if(r.width() < 428){
+            else if(r.width() < 428)
+            // first vertical layout
                 verticalOne(r, label, resultCnt, spacing);
-            }else if(r.width() >= 428 && r.width() <= 620){
+            else if(r.width() >= 428 && r.width() <= 620){
                 column = 2;
                 squareWidth = r.width() / column;
-                if(r.height() - 210< squareWidth){
+                if(r.height() - 210< squareWidth)
+                // horizontal layout
                     horizontalOne(r, label, spacing);
-                }else{
+                else
+                // second vertical layout
                     verticalTwo(r, label, resultCnt, spacing);
-                }
             }else if(r.width() > 620 && r.width() < 890){
                 if(r.width() < 890){
                     column = 3;
@@ -42,20 +42,19 @@ void ResponsiveLayout::setGeometry(const QRect &r ) { // our layout should fit i
                     setSearchGeometry(r, label, resultCnt, 4);
                 }
                 squareWidth = r.width() / column;
-                if(r.height() - 270< squareWidth){
+                if(r.height() - 270< squareWidth)
                     horizontalOne(r, label, spacing);
-                }else{
+                else
+                // third vertical layout
                     verticalThree(r, label, spacing);
-                }
             }else{
                 column = 4;
                 squareWidth = r.width() / column;
-                
-                if(r.height() - 270 < squareWidth){
+                if(r.height() - 270 < squareWidth)
                     horizontalOne(r, label, spacing);
-                }else{
+                else
+                // fourth vertical layout
                     verticalFour(r, label, resultCnt, spacing);
-                }
             }
         }
         catch (std::bad_cast) {
@@ -65,8 +64,9 @@ void ResponsiveLayout::setGeometry(const QRect &r ) { // our layout should fit i
     }
 }
 
+// first vertical layout
 void ResponsiveLayout::verticalOne(const QRect &r, ResponsiveLabel* label, \
-int &resultCnt, int spacing){
+int &resultCnt, double spacing){
     if(label->text() == kHomeLink)
         label->setGeometry(0, 0, 0, 0);
     else if(label->text() == kShoppingBasket)
@@ -92,8 +92,9 @@ int &resultCnt, int spacing){
     setSearchGeometry(r, label, resultCnt, 2);
 }
 
+// second vertical layout
 void ResponsiveLayout::verticalTwo(const QRect &r, ResponsiveLabel* label, \
-int &resultCnt, int spacing){
+int &resultCnt, double spacing){
     if(label->text() == kHomeLink)
         label->setGeometry(0.12 * r.width(), 0, 0.15 * r.width(), 45);
     else if(label->text() == kShoppingBasket)
@@ -119,8 +120,9 @@ int &resultCnt, int spacing){
     setSearchGeometry(r, label, resultCnt, 2);
 }
 
+// three vertical layout
 void ResponsiveLayout::verticalThree(const QRect &r, ResponsiveLabel* label, \
- int spacing){
+ double spacing){
     if(label->text() == kHomeLink)
         label->setGeometry(spacing, 0, 0.12 * r.width(), 50);
     else if(label->text() == kShoppingBasket)
@@ -145,8 +147,9 @@ void ResponsiveLayout::verticalThree(const QRect &r, ResponsiveLabel* label, \
         label->setGeometry(0, 0, 0, 0);
 }
 
+// fourth vertical layout
 void ResponsiveLayout::verticalFour(const QRect &r, ResponsiveLabel* label, \
-int &resultCnt, int spacing){
+int &resultCnt, double spacing){
     if(label->text() == kHomeLink)
         label->setGeometry(0.12 * r.width(), 0, 0.1 * r.width() , 50);
     else if(label->text() == kShoppingBasket)
@@ -169,12 +172,12 @@ int &resultCnt, int spacing){
         label->setGeometry(0.78 * r.width(), 0, 0.1 * r.width(), 50);
     else if(label->text() == kSLocation)
         label->setGeometry(0.89 * r.width(), 0, 0.1 * r.width(), 50);
-    
     setSearchGeometry(r, label, resultCnt, 4);
 }
 
-void ResponsiveLayout::horizontalOne(const QRect &r, ResponsiveLabel* label, int spacing){
-    int widgetHeight = (r.height() - 4 * spacing) / 5;
+// horizontal layout
+void ResponsiveLayout::horizontalOne(const QRect &r, ResponsiveLabel* label, double spacing){
+    double widgetHeight = (r.height() - 4 * spacing) / 5;
     if(label->text() == kHomeLink)
         label->setGeometry(spacing, widgetHeight + spacing, 80, widgetHeight);
     else if(label->text() == kShoppingBasket)
@@ -199,41 +202,42 @@ void ResponsiveLayout::horizontalOne(const QRect &r, ResponsiveLabel* label, int
         label->setGeometry(0, 0, 0, 0);
 }
 
+// set geometry for widgets in scroll area
 void ResponsiveLayout::setSearchGeometry(const QRect &r, ResponsiveLabel* label, int &resultCnt, int column){
-    int spacing = 0.01 * r.width();
-    int squareWidth = (0.99 * r.width() - spacing * column) / column;
-    int imageHeight = (squareWidth - spacing) * 0.8;
-    int textHeight = (squareWidth - spacing) * 0.2;
+    double spacing = 0.01 * r.width();
+    double squareWidth = (0.99 * r.width() - spacing * column) / column;
+    double imageHeight = (squareWidth - spacing) * 0.8;
+    double textHeight = (squareWidth - spacing) * 0.2;
     if(label->text() == kSResultImage){
-            resultCnt++;
-            int remainder = resultCnt % column;
-            int divisor = resultCnt / column;
-            if(!remainder){
-                remainder = column;
-                divisor --;
-            }
-            int imageX = spacing * remainder + (remainder - 1) * squareWidth;
-            int imageY = divisor * (squareWidth + spacing);
-            label->setGeometry(imageX, imageY , squareWidth, imageHeight);
-        }else if(label->text() == kSResultText){
-            int remainder = resultCnt % column;
-            int divisor = resultCnt / column;
-            if(!remainder){
-                remainder = column;
-                divisor --;
-            }
-            int textX = spacing * remainder + (remainder - 1) * squareWidth;
-            int textY = divisor* (squareWidth + spacing) + imageHeight + spacing;
-            label->setGeometry(textX, textY, squareWidth, textHeight);
-        }else if(label->text() == kSBackward){
-            int backwardX = 0.495 * r.width() - textHeight;
-            int backwardY = (resultCnt / column + 1) * (squareWidth + spacing);
-            label->setGeometry(backwardX, backwardY, textHeight, textHeight);
-        }else if(label->text() == kSForward){
-            int forwardX = 0.505 * r.width();
-            int forwardY = (resultCnt / column + 1) * (squareWidth + spacing);
-            label->setGeometry(forwardX, forwardY, textHeight, textHeight);
+        resultCnt++;
+        int remainder = resultCnt % column;
+        int divisor = resultCnt / column;
+        if(!remainder){
+            remainder = column;
+            divisor --;
         }
+        double imageX = spacing * remainder + (remainder - 1) * squareWidth;
+        double imageY = divisor * (squareWidth + spacing);
+        label->setGeometry(imageX, imageY , squareWidth, imageHeight);
+    }else if(label->text() == kSResultText){
+        int remainder = resultCnt % column;
+        int divisor = resultCnt / column;
+        if(!remainder){
+            remainder = column;
+            divisor --;
+        }
+        double textX = spacing * remainder + (remainder - 1) * squareWidth;
+        double textY = divisor* (squareWidth + spacing) + imageHeight + spacing;
+        label->setGeometry(textX, textY, squareWidth, textHeight);
+    }else if(label->text() == kSBackward){
+        double backwardX = 0.495 * r.width() - textHeight;
+        double backwardY = (resultCnt / column + 1) * (squareWidth + spacing);
+        label->setGeometry(backwardX, backwardY, textHeight, textHeight);
+    }else if(label->text() == kSForward){
+        double forwardX = 0.505 * r.width();
+        double forwardY = (resultCnt / column + 1) * (squareWidth + spacing);
+        label->setGeometry(forwardX, forwardY, textHeight, textHeight);
+    }
 }
 
 

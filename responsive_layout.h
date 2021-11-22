@@ -15,21 +15,17 @@
 class ResponsiveLayout : public QLayout {
 
 public:
-    ResponsiveLayout(): QLayout() {
-//        addChildLayout()
-    }
-    ResponsiveLayout(QWidget *parents): QLayout(parents){
-
-    };
+    ResponsiveLayout(): QLayout() {}
+    ResponsiveLayout(QWidget *parents): QLayout(parents){};
     ~ResponsiveLayout();
 
     // standard functions for a QLayout
     void setGeometry(const QRect &rect);
-    void verticalOne(const QRect &r, ResponsiveLabel* label, int &resultCnt, int spacing);
-    void verticalTwo(const QRect &r, ResponsiveLabel* label, int &resultCnt, int spacing);
-    void verticalThree(const QRect &r, ResponsiveLabel* label, int spacing);
-    void verticalFour(const QRect &r, ResponsiveLabel* label, int &resultCnt, int spacing);
-    void horizontalOne(const QRect &r, ResponsiveLabel* label, int spacing);
+    void verticalOne(const QRect &r, ResponsiveLabel* label, int &resultCnt, double spacing);
+    void verticalTwo(const QRect &r, ResponsiveLabel* label, int &resultCnt, double spacing);
+    void verticalThree(const QRect &r, ResponsiveLabel* label, double spacing);
+    void verticalFour(const QRect &r, ResponsiveLabel* label, int &resultCnt, double spacing);
+    void horizontalOne(const QRect &r, ResponsiveLabel* label, double spacing);
     void setSearchGeometry(const QRect &r, ResponsiveLabel* label, int &resultCnt, int column);
     void addItem(QLayoutItem *item);
     QSize sizeHint() const;
