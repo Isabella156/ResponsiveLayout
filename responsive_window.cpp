@@ -25,7 +25,7 @@ double width, double height, int column){
     areaWidth = width - areaX;
     areaHeight = height;
     scrollY = areaY;
-    scrollWidth = areaWidth - 40;
+    scrollWidth = areaWidth ;
     scrollHeight = (scrollWidth / column) * (16 / column + 1) + 0.1 * scrollWidth;
 }
 
@@ -38,7 +38,7 @@ double &scrollHeight, double width, double height){
     areaWidth = width;
     areaHeight = height - areaY;
     scrollY = areaY;
-    scrollWidth = areaWidth - 40;
+    scrollWidth = areaWidth;
     scrollHeight = scrollWidth * 4.6;
 }
 
@@ -51,7 +51,7 @@ double &scrollHeight, double width, double height){
     areaWidth = width;
     areaHeight = height - areaY;
     scrollY = areaY;
-    scrollWidth = areaWidth - 40;
+    scrollWidth = areaWidth ;
     scrollHeight = scrollWidth * 4.6;
 }
 
@@ -64,7 +64,7 @@ double width, double height){
     areaWidth = width;
     areaHeight = height - areaY;
     scrollY = areaY;
-    scrollWidth = areaWidth - 40;
+    scrollWidth = areaWidth;
 }
 
 // change the geometry for scroll area and scroll when resizing the window
@@ -94,9 +94,9 @@ void ResponsiveWindow::resizeEvent(QResizeEvent *event){
         squareWidth = width / column;
         if(height - 270 < squareWidth){
             areaWidth = width - 180 - 2 * spacing;
-            if(areaWidth < 660)
+            if(areaWidth < 620)
                 column = 2;
-            else if(areaWidth >= 660 && areaWidth < 930)
+            else if(areaWidth >= 620 && areaWidth < 890)
                 column = 3;
             else
                 column = 4;
@@ -105,9 +105,9 @@ void ResponsiveWindow::resizeEvent(QResizeEvent *event){
         }else{
             verticalThreeScroll(areaX, areaY, areaWidth, areaHeight, scrollX, \
             scrollY, scrollWidth, width, height);
-            if(width < 660)
+            if(width < 620)
                 scrollHeight = scrollWidth * 4.55;
-            else if(width >= 660 && width < 930)
+            else if(width >= 620 && width < 890)
                 scrollHeight = scrollWidth * 2.05;
             else
                 scrollHeight = scrollWidth * 1.3;
@@ -128,7 +128,7 @@ void ResponsiveWindow::createWidgets() {
     // scroll area
     scrollArea = new QScrollArea(this);
     scrollArea->setFrameShape(QFrame::NoFrame);
-//    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     scroll = new QWidget(scrollArea);
     scrollArea->setWidget(scroll);
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.11.0, 2021-11-22T09:06:11. -->
+<!-- Written by QtCreator 4.11.0, 2021-11-22T10:58:15. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -289,7 +289,7 @@
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:D:/Codefield/CODE_C++/responsive/responsive.pro</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">D:/Codefield/CODE_C++/responsive/responsive.pro</value>
-    <value type="QString" key="RunConfiguration.Arguments">&quot;D:\Codefield\CODE_C++\responsive&quot;</value>
+    <value type="QString" key="RunConfiguration.Arguments">&quot;D:\Codefield\CODE_C++\responsive&quot; unpack</value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
